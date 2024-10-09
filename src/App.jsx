@@ -7,6 +7,7 @@ function App() {
   const [data, setData] = useState(null);
   const [location, setLocation] = useState("London,UK");
   const [inputValue, setInputValue] = useState("");
+  const [matches, setMatches] = useState([]);
 
   async function fetchAPIData() {
     const WEATHER_KEY = import.meta.env.VITE_WEATHER_API_KEY;
@@ -28,10 +29,19 @@ function App() {
     fetchAPIData();
   }, [location]);
 
-  const handleChange = (value) => {
-    setLocation(value);
-    fetchAPIData(value);
-  };
+  function checkDatabase(value) {
+    const filteredCities = cityList.filter(
+      (city) =>
+        city.name.toLowerCase().startsWith(value.toLowerCase()) &&
+        city.country === "US"
+    );
+
+    setMatches(filteredCities);
+    // console.log(matches.map((city) => <li key={city.id}>{city.name}</li>));
+    // return matches.map((city) => <li key={city.id}>{city.name}</li>);
+    console.log(filteredCities);
+    return filteredCities;
+  }
 
   return (
     <>
@@ -40,6 +50,9 @@ function App() {
         setInputValue={setInputValue}
         location={location}
         setLocation={setLocation}
+        matches={matches}
+        setMatches={setMatches}
+        checkDatabase={checkDatabase}
       />
       <WeatherCard data={data} />
     </>
